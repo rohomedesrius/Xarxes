@@ -1,0 +1,5 @@
+﻿  MainClient.cpp
+MainClient.obj : error LNK2019: símbolo externo __imp_htons sin resolver al que se hace referencia en la función "void __cdecl Client(char const *,int)" (?Client@@YAXPEBDH@Z)
+MainClient.obj : error LNK2019: símbolo externo __imp_socket sin resolver al que se hace referencia en la función "void __cdecl Client(char const *,int)" (?Client@@YAXPEBDH@Z)
+MainClient.obj : error LNK2019: símbolo externo __imp_WSAStartup sin resolver al que se hace referencia en la función "void __cdecl Client(char const *,int)" (?Client@@YAXPEBDH@Z)
+C:\Users\roger\Desktop\Session 1 - Sockets UDP\x64\Debug\Session 1 - Sockets UDP - Client.exe : fatal error LNK1120: 3 externos sin resolver
