@@ -1,0 +1,3 @@
+﻿  ModuleServer.cpp
+c:\users\rogerhr\documents\github\xarxes\p3 - mailingapp - todo\src\moduleserver.cpp(398): warning C4715: 'ModuleServer::getClientStateInfoForSocket': not all control paths return a value
+  MailingApp.vcxproj -> C:\Users\rogerhr\Documents\GitHub\Xarxes\P3 - MailingApp - TODO\x64\Debug\MailingApp.exe
