@@ -1,0 +1,3 @@
+https://dev.mysql.com/downloads/connector/odbc/
+
+V: 8.0 x64
