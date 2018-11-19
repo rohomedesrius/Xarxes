@@ -9,9 +9,8 @@ enum State
 	ST_INIT,
 	ST_REGISTERING,
 	ST_IDLE,
-	
-	// TODO: Other states
-
+	ST_NEGOCIATING,
+	ST_UNREGISTERING,
 	ST_FINISHED
 };
 
@@ -33,22 +32,28 @@ void MCC::update()
 	switch (state())
 	{
 	case ST_INIT:
-		if (registerIntoYellowPages()) {
+		if (registerIntoYellowPages()) 
 			setState(ST_REGISTERING);
-		}
-		else {
+		else 
 			setState(ST_FINISHED);
-		}
 		break;
 
 	case ST_REGISTERING:
 		// See OnPacketReceived()
 		break;
+		
+	case ST_IDLE:
+		break;
 
-		// TODO: Handle other states
+	case ST_NEGOCIATING:
+		break;
 
+	case ST_UNREGISTERING:
+		break;
+			
 	case ST_FINISHED:
 		destroy();
+		break;
 	}
 }
 

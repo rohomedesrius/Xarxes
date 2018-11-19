@@ -9,9 +9,8 @@ enum State
 	ST_INIT,
 	ST_REQUESTING_MCCs,
 	ST_ITERATING_OVER_MCCs,
-
-	// TODO: Other states
-
+	ST_WAIT_ACCEPTANCE,
+	ST_NEGOCIATING_UCP_RES,
 	ST_NEGOTIATION_FINISHED
 };
 
@@ -38,12 +37,19 @@ void MCP::update()
 		break;
 
 	case ST_ITERATING_OVER_MCCs:
-		// TODO: Handle this state
 		break;
 
-	// TODO: Handle other states
+	case ST_REQUESTING_MCCs:
+		break;
 
-	default:;
+	case ST_WAIT_ACCEPTANCE:
+		break;
+
+	case ST_NEGOCIATING_UCP_RES:
+		break;
+
+	case ST_NEGOTIATION_FINISHED:
+		break;
 	}
 }
 

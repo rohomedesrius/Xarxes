@@ -6,11 +6,11 @@
 // TODO: Make an enum with the states
 enum UCP_states
 {
-	INIT, 
-	REQUEST_ITEM,
-	RESOLVING_CONSTRAINT,
-	SENDING_CONSTRAINT, 
-	NEGOTIATION_FINISHED
+	ST_INIT, 
+	ST_REQUEST_ITEM,
+	ST_RESOLVING_CONSTRAINT,
+	ST_SENDING_CONSTRAINT, 
+	ST_NEGOTIATION_FINISHED
 };
 
 UCP::UCP(Node *node, uint16_t requestedItemId, uint16_t contributedItemId, const AgentLocation &ucpsLoc, unsigned int searchDepth) : Agent(node)
@@ -20,7 +20,7 @@ UCP::UCP(Node *node, uint16_t requestedItemId, uint16_t contributedItemId, const
 	_ucpLocation = ucpsLoc;
 	_searchDepth = searchDepth;
 
-	setState(INIT);
+	setState(ST_INIT);
 }
 
 UCP::~UCP()
@@ -31,26 +31,24 @@ void UCP::update()
 {
 	switch (state())
 	{
-	case INIT: {
+	case ST_INIT: 
 		break;
-	}
-	case REQUEST_ITEM: {
+
+	case ST_REQUEST_ITEM: 
 		itemRequest();
 		break;
-	}
-	case RESOLVING_CONSTRAINT: {
+	
+	case ST_RESOLVING_CONSTRAINT: 
 		resolveConstraint();
 		break;
-	}
-	case SENDING_CONSTRAINT: {
+	
+	case ST_SENDING_CONSTRAINT: 
 		sendConstraint();
 		break;
-	}
-	case NEGOTIATION_FINISHED: {
+	
+	case ST_NEGOTIATION_FINISHED: 
 		finishNegotiation();
 		break;
-	}
-	default:;
 	}
 }
 
