@@ -6,11 +6,14 @@ enum UCC_states
 {
 	WAITING_REQUEST, 
 	WAITING_CONSTRAINT,
-	NEGOTIATION_FINISHED
+	NEGOTIATION_FINISHED,
+	FINISHED
 };
 
 UCC::UCC(Node *node, uint16_t contributedItemId, uint16_t constraintItemId) :
-	Agent(node)
+	Agent(node), 
+	_contributedItemId(contributedItemId), 
+	_constraintItemId(constraintItemId)
 {
 	// TODO: Save input parameters
 }
@@ -36,3 +39,5 @@ void UCC::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader
 		wLog << "OnPacketReceived() - Unexpected PacketType.";
 	}
 }
+
+

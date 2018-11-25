@@ -19,14 +19,12 @@ enum class PacketType
 	ReturnMCCsForItem,
 	
 	// MCP <-> MCC
-	NegotiationRequest,
-	NegotiationAcceptance,
+	MC_NegotiationRequest,
+	MC_NegotiationAcceptance,
 
 	// UCP <-> UCC
-	ItemRequest,
-	ConstraintRequest,
-	ConstraintResult,
-	ConstraintAck,
+	UC_NegotiationRequest,
+	UC_NegotiationAcceptance,
 	
 	Last
 };
@@ -116,8 +114,41 @@ public:
 
 //TODO
 
+class MCPacketNegociationRequest
+{
+public:
+
+	uint16_t itemID;
+
+	void Read(InputMemoryStream &stream) 
+	{
+		stream.Read(itemID);
+	}
+
+	void Write(OutputMemoryStream &stream) 
+	{
+		stream.Write(itemID);
+	}
+};
+
 
 
 // UCP <-> UCC
 
 // TODO
+class MCPacketNegociationAcceptance
+{
+public:
+
+	uint16_t itemID;
+
+	void Read(InputMemoryStream &stream)
+	{
+		stream.Read(itemID);
+	}
+
+	void Write(OutputMemoryStream &stream)
+	{
+		stream.Write(itemID);
+	}
+};
