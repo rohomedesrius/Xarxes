@@ -114,9 +114,22 @@ public:
 
 // MCP <-> MCC
 
-//TODO
+class MCPacketNegociationRequest
+{
+public:
 
+	uint16_t itemID;
 
+	void Read(InputMemoryStream &stream)
+	{
+		stream.Read(itemID);
+	}
+
+	void Write(OutputMemoryStream &stream)
+	{
+		stream.Write(itemID);
+	}
+};
 
 // UCP <-> UCC
 class PacketAcceptNegotiation
