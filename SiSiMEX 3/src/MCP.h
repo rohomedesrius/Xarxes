@@ -24,6 +24,8 @@ public:
 	uint16_t requestedItemId() const { return _requestedItemId; }
 	uint16_t contributedItemId() const { return _contributedItemId; }
 
+	bool StartNegotioationRequest();
+
 	// Whether or not the negotiation finished
 	bool negotiationFinished() const;
 

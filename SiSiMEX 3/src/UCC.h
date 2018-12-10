@@ -17,5 +17,11 @@ public:
 	void OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader, InputMemoryStream &stream) override;
 
 	// TODO
+	uint16_t GetContributedItemId() const;
+	uint16_t GetConstraintItemId() const;
+
+private:
+	uint16_t _contributedItemId; /**< The contributed item. */
+	uint16_t _constraintItemId; /**< The constraint item. */
 };
 

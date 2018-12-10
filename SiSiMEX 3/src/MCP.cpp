@@ -2,6 +2,7 @@
 #include "UCP.h"
 #include "Application.h"
 #include "ModuleAgentContainer.h"
+#include "AgentLocation.h"
 
 
 enum State
@@ -37,6 +38,7 @@ void MCP::update()
 		break;
 
 	case ST_ITERATING_OVER_MCCs:
+		StartNegotioationRequest();
 		break;
 
 	case ST_REQUESTING_MCCs:
@@ -103,6 +105,23 @@ void MCP::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader
 		wLog << "OnPacketReceived() - Unexpected PacketType.";
 	}
 }
+
+bool MCP::StartNegotioationRequest()
+{
+	OutputMemoryStream ostream;
+
+	PacketHeader p;
+	p.packetType = PacketType::NegotiationRequest;
+	p.srcAgentId = id();
+	p.dstAgentId = _mccRegisters[_mccRegisterIndex].agentId;
+
+	p.Write(ostream);
+
+	bool ret = sendPacketToAgent(_mccRegisters[_mccRegisterIndex].hostIP, _mccRegisters[_mccRegisterIndex].hostPort, ostream);
+	setState(ST_WAIT_ACCEPTANCE);
+	return ret;
+}
+
 
 bool MCP::negotiationFinished() const
 {
