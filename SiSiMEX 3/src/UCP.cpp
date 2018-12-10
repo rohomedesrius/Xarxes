@@ -13,12 +13,12 @@ enum UCP_states
 	ST_NEGOTIATION_FINISHED
 };
 
-UCP::UCP(Node *node, uint16_t requestedItemId, uint16_t contributedItemId, const AgentLocation &ucpsLoc, unsigned int searchDepth) : Agent(node)
+UCP::UCP(Node *node, uint16_t _requestedItemId, uint16_t _contributedItemId, const AgentLocation &ucpsLoc, unsigned int _searchDepth) : Agent(node)
 {
-	_requestedItemId = requestedItemId;
-	_contributedItemId = contributedItemId;
-	_ucpLocation = ucpsLoc;
-	_searchDepth = searchDepth;
+	requestedItemId = _requestedItemId;
+	contributedItemId = _contributedItemId;
+	ucpLocation = ucpsLoc;
+	searchDepth = _searchDepth;
 
 	setState(ST_INIT);
 }
@@ -54,7 +54,8 @@ void UCP::update()
 
 void UCP::stop()
 {
-	// TODO: Destroy search hierarchy below this agent
+	if (mcp != nullptr)
+		mcp->stop();
 
 	destroy();
 }

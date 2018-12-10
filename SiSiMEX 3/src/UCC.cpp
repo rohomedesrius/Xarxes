@@ -4,6 +4,7 @@
 // TODO: Make an enum with the states
 enum UCC_states
 {
+	ST_INIT,
 	WAITING_REQUEST, 
 	WAITING_CONSTRAINT,
 	NEGOTIATION_FINISHED
@@ -12,13 +13,14 @@ enum UCC_states
 UCC::UCC(Node *node, uint16_t _contributedItemId, uint16_t _constraintItemId) :
 	Agent(node), contributedItemId(_constraintItemId), constraintItemId(_constraintItemId)
 {
-	setState(WAITING_REQUEST);
+	setState(ST_INIT);
 }
 
 UCC::~UCC()
 {
 }
 
+/*
 void UCC::update()
 {
 	switch (state())
@@ -33,6 +35,7 @@ void UCC::update()
 		break;
 	}
 }
+*/
 
 void UCC::stop()
 {
