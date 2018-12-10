@@ -119,5 +119,20 @@ public:
 
 
 // UCP <-> UCC
+class PacketAcceptNegotiation
+{
+public:
+	bool acceptedNegotiation;
 
-// TODO
+	void Read(InputMemoryStream &stream)
+	{
+		stream.Read(acceptedNegotiation);
+	}
+	void Write(OutputMemoryStream &stream)
+	{
+		stream.Write(acceptedNegotiation);
+	}
+};
+using PacketItemRequest = PacketRegisterMCC;
+
+using PacketConstraintRequest = PacketRegisterMCC;

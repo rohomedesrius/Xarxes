@@ -7,7 +7,7 @@ class UCC :
 public:
 
 	// Constructor and destructor
-	UCC(Node *node, uint16_t contributedItemId, uint16_t constraintItemId);
+	UCC(Node *node, uint16_t _contributedItemId, uint16_t _constraintItemId);
 	~UCC();
 
 	// Agent methods
@@ -17,11 +17,12 @@ public:
 	void OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader, InputMemoryStream &stream) override;
 
 	// TODO
-	uint16_t GetContributedItemId() const;
-	uint16_t GetConstraintItemId() const;
+	bool SendToUCP(uint16_t id);
+
+	uint16_t getContributedId() const { return contributedItemId; }
+	uint16_t getConstraintId() const { return constraintItemId; }
 
 private:
-	uint16_t _contributedItemId; /**< The contributed item. */
-	uint16_t _constraintItemId; /**< The constraint item. */
+	uint16_t contributedItemId;
+	uint16_t constraintItemId;
 };
-
