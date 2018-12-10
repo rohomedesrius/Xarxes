@@ -118,16 +118,16 @@ class MCPacketNegociationRequest
 {
 public:
 
-	uint16_t itemID;
+	bool availableNegotiation;
 
 	void Read(InputMemoryStream &stream)
 	{
-		stream.Read(itemID);
+		stream.Read(availableNegotiation);
 	}
 
 	void Write(OutputMemoryStream &stream)
 	{
-		stream.Write(itemID);
+		stream.Write(availableNegotiation);
 	}
 };
 

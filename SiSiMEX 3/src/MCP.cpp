@@ -109,7 +109,23 @@ void MCP::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader
 
 	case PacketType::NegotiationAcceptance:
 	{
-		if(state() == ST_WAIT_ACCEPTANCE)
+		if (state() == ST_WAIT_ACCEPTANCE)
+		{
+			MCPacketNegociationRequest packetData;
+			packetData.Read(stream);
+
+			if (packetData.availableNegotiation == true)
+			{
+				CreateUCP();
+				setState(ST_NEGOCIATING_UCP_RES);
+			}
+
+			else
+			{
+				_mccRegisterIndex++;
+				setState(ST_ITERATING_OVER_MCCs);
+			}
+		}
 	}
 
 	default:
