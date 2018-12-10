@@ -24,6 +24,9 @@ public:
 	uint16_t requestedItemId() const { return _requestedItemId; }
 	uint16_t contributedItemId() const { return _contributedItemId; }
 
+	void CreateUCP(const AgentLocation loc);
+	void StopUCP();
+
 	bool StartNegotioationRequest();
 
 	// Whether or not the negotiation finished
@@ -42,11 +45,13 @@ private:
 	uint16_t _requestedItemId;
 	uint16_t _contributedItemId;
 
+	bool _negotiationSucces = false;
+
 	int _mccRegisterIndex; /**< Iterator through _mccRegisters. */
 	std::vector<AgentLocation> _mccRegisters; /**< MCCs returned by the YP. */
 
 	unsigned int _searchDepth;
 
-	// TODO: Add extra attributes and methods?
+	UCPPtr _ucp;
 };
 
