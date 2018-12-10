@@ -2,7 +2,6 @@
 #include "UCP.h"
 #include "Application.h"
 #include "ModuleAgentContainer.h"
-#include "AgentLocation.h"
 
 
 enum State
@@ -48,6 +47,15 @@ void MCP::update()
 		break;
 
 	case ST_NEGOCIATING_UCP_RES:
+
+		UCP* ucp = _ucp.get();
+		if (ucp != nullptr)
+		{
+			if (ucp->state() == State::ST_NEGOTIATION_FINISHED)
+			{
+				//_negotiationSucces = ucp->ne;  TODO get the bool from ucp	
+			}
+		}
 		break;
 
 	case ST_NEGOTIATION_FINISHED:
@@ -58,7 +66,7 @@ void MCP::update()
 void MCP::stop()
 {
 	// TODO: Destroy the underlying search hierarchy (UCP->MCP->UCP->...)
-
+	StopUCP();
 	destroy();
 }
 
@@ -99,7 +107,10 @@ void MCP::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader
 		}
 		break;
 
-	// TODO: Handle other packets
+	case PacketType::NegotiationAcceptance:
+	{
+		if(state() == ST_WAIT_ACCEPTANCE)
+	}
 
 	default:
 		wLog << "OnPacketReceived() - Unexpected PacketType.";
@@ -130,9 +141,21 @@ bool MCP::negotiationFinished() const
 
 bool MCP::negotiationAgreement() const
 {
-	return false; // TODO: Did the child UCP find a solution?
+	return _negotiationSucces; // TODO: Did the child UCP find a solution?
 }
 
+void MCP::CreateUCP(const AgentLocation loc)
+{
+	Node* n = new Node(App->agentContainer->allAgents().size());
+	_ucp = App->agentContainer->createUCP(n, requestedItemId(), contributedItemId(), 
+		loc, searchDepth());
+}
+
+void MCP::StopUCP()
+{
+	if (_ucp != nullptr) _ucp->stop();
+	delete _ucp.get();
+}
 
 bool MCP::queryMCCsForItem(int itemId)
 {
