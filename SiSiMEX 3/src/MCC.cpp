@@ -46,6 +46,13 @@ void MCC::update()
 		break;
 
 	case ST_NEGOCIATING:
+		if (_ucc.get() != nullptr)
+		{
+			if (_ucc.get()->state() == State::ST_FINISHED)
+			{
+				//TODO wait for ucc
+			}
+		}
 		break;
 
 	case ST_UNREGISTERING:
@@ -60,7 +67,7 @@ void MCC::update()
 void MCC::stop()
 {
 	// Destroy hierarchy below this agent (only a UCC, actually)
-	destroyChildUCC();
+	DestroyUCC();
 
 	unregisterFromYellowPages();
 	setState(ST_FINISHED);
@@ -70,6 +77,10 @@ void MCC::stop()
 void MCC::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader, InputMemoryStream &stream)
 {
 	const PacketType packetType = packetHeader.packetType;
+
+	MCPacketNegociationRequest packetData;
+	OutputMemoryStream outStream;
+
 
 	switch (packetType)
 	{
@@ -86,6 +97,57 @@ void MCC::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader
 		break;
 
 	// TODO: Handle other packets
+	case PacketType::NegotiationRequest:
+
+		PacketHeader outPacketHead;
+
+
+		outPacketHead.packetType = PacketType::NegotiationAcceptance;
+		outPacketHead.srcAgentId = id();
+		outPacketHead.dstAgentId = packetHeader.srcAgentId;
+
+		if (state() != ST_IDLE)
+		{
+			//negociation is available
+			packetData.availableNegotiation = true;
+		}
+
+		else
+		{
+			//TODO
+			/*if (node()->itemList().isItemsWithIdUsed(_contributedItemId))
+			{
+				packetData.availableNegotiation = false;
+
+				outPacketHead.Write(outStream);
+				packetData.Write(outStream);
+				socket->SendPacket(outStream.GetBufferPtr(), outStream.GetSize());
+
+				break;
+			}
+			else
+			{
+				node()->itemList().UpdateItemUsed(_contributedItemId, true);
+			}*/
+
+			packetData.availableNegotiation = true;
+
+			CreateUCC();
+
+			//Set AgentLocation
+			packetData.location.hostIP = socket->RemoteAddress().GetIPString();
+			packetData.location.hostPort = LISTEN_PORT_AGENTS;
+			packetData.location.agentId = _ucc->id();
+
+			setState(ST_NEGOCIATING);
+		}
+
+		outPacketHead.Write(outStream);
+		packetData.Write(outStream);
+		socket->SendPacket(outStream.GetBufferPtr(), outStream.GetSize());
+
+		break;
+
 
 	default:
 		wLog << "OnPacketReceived() - Unexpected PacketType.";
@@ -145,12 +207,16 @@ void MCC::unregisterFromYellowPages()
 	sendPacketToYellowPages(stream);
 }
 
-void MCC::createChildUCC()
+void MCC::CreateUCC()
 {
 	// TODO: Create a unicast contributor
+	Node* newNode = new Node(App->agentContainer->allAgents().size());
+	_ucc = App->agentContainer->createUCC(node(), contributedItemId(), constraintItemId());
 }
 
-void MCC::destroyChildUCC()
+void MCC::DestroyUCC()
 {
 	// TODO: Destroy the unicast contributor child
+	if (_ucc != nullptr)
+		_ucc->stop();
 }

@@ -37,9 +37,9 @@ private:
 	
 	void unregisterFromYellowPages();
 
-	void createChildUCC();
+	void CreateUCC();
 
-	void destroyChildUCC();
+	void DestroyUCC();
 
 	uint16_t _contributedItemId; /**< The contributed item. */
 	uint16_t _constraintItemId; /**< The constraint item. */

@@ -48,7 +48,6 @@ void MCP::update()
 
 	case ST_NEGOCIATING_UCP_RES:
 
-		_ucp.get();
 		if (_ucp.get() != nullptr)
 		{
 			if (_ucp.get()->state() == State::ST_NEGOTIATION_FINISHED)
