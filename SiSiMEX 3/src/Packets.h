@@ -119,15 +119,19 @@ class MCPacketNegociationRequest
 public:
 
 	bool availableNegotiation;
+	AgentLocation location;
+
 
 	void Read(InputMemoryStream &stream)
 	{
 		stream.Read(availableNegotiation);
+		location.Read(stream);
 	}
 
 	void Write(OutputMemoryStream &stream)
 	{
 		stream.Write(availableNegotiation);
+		location.Write(stream);
 	}
 };
 

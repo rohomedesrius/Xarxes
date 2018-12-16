@@ -116,7 +116,7 @@ void MCP::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader
 
 			if (packetData.availableNegotiation == true)
 			{
-				CreateUCP();
+				CreateUCP(packetData.location);
 				setState(ST_NEGOCIATING_UCP_RES);
 			}
 
