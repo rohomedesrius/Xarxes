@@ -48,10 +48,10 @@ void MCP::update()
 
 	case ST_NEGOCIATING_UCP_RES:
 
-		UCP* ucp = _ucp.get();
-		if (ucp != nullptr)
+		_ucp.get();
+		if (_ucp.get() != nullptr)
 		{
-			if (ucp->state() == State::ST_NEGOTIATION_FINISHED)
+			if (_ucp.get()->state() == State::ST_NEGOTIATION_FINISHED)
 			{
 				//_negotiationSucces = ucp->ne;  TODO get the bool from ucp	
 			}
