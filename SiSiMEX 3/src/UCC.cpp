@@ -20,23 +20,6 @@ UCC::~UCC()
 {
 }
 
-/*
-void UCC::update()
-{
-	switch (state())
-	{
-	case WAITING_REQUEST:
-		break;
-	case WAITING_CONSTRAINT:
-		break;
-	case NEGOTIATION_FINISHED:
-		break;
-	default:
-		break;
-	}
-}
-*/
-
 void UCC::stop()
 {
 	destroy();
@@ -70,6 +53,16 @@ void UCC::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader
 			wLog << "UCC 1 - OnPacketReceived() - PacketType::RequestItem was unexpected.";
 		}
 		break;
+
+	case PacketType::NegotiationAcceptance:
+		if (state() == WAITING_CONSTRAINT)
+		{
+			PacketAcceptNegotiation packetData;
+			packetData.Read(stream);
+
+			negotiationSuccesful = packetData.acceptedNegotiation;
+			setState(NEGOTIATION_FINISHED);
+		}
 
 	default:
 		wLog << "OnPacketReceived() - Unexpected PacketType.";

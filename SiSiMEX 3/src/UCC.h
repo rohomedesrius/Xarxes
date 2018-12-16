@@ -25,4 +25,6 @@ public:
 private:
 	uint16_t contributedItemId;
 	uint16_t constraintItemId;
+
+	bool negotiationSuccesful = false;
 };
