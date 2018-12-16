@@ -136,18 +136,18 @@ public:
 };
 
 // UCP <-> UCC
-class PacketAcceptNegotiation
+class UCPacketAcceptNegotiation
 {
 public:
-	bool acceptedNegotiation;
+	bool negotiationAccepted;
 
 	void Read(InputMemoryStream &stream)
 	{
-		stream.Read(acceptedNegotiation);
+		stream.Read(negotiationAccepted);
 	}
 	void Write(OutputMemoryStream &stream)
 	{
-		stream.Write(acceptedNegotiation);
+		stream.Write(negotiationAccepted);
 	}
 };
 using PacketItemRequest = PacketRegisterMCC;

@@ -35,19 +35,15 @@ void UCP::update()
 		break;
 
 	case ST_REQUEST_ITEM: 
-		itemRequest();
 		break;
 	
 	case ST_RESOLVING_CONSTRAINT: 
-		resolveConstraint();
 		break;
 	
 	case ST_SENDING_CONSTRAINT: 
-		sendConstraint();
 		break;
 	
 	case ST_NEGOTIATION_FINISHED: 
-		finishNegotiation();
 		break;
 	}
 }
@@ -66,29 +62,96 @@ void UCP::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader
 
 	switch (packetType)
 	{
-		// TODO: Handle packets
+	case PacketType::ConstraintRequest:
+		if (state() == ST_REQUEST_ITEM)
+		{
+			PacketHeader packet;
+			packet.packetType = packetType;
+			PacketItemRequest item_req;
+			PacketConstraintRequest constrain_req;
+			
+			item_req.Read(stream);
+			UCPacketAcceptNegotiation negPacket;
+			OutputMemoryStream outStream;
+
+			unsigned int _depth = getDepth();
+
+			if (item_req.itemId == getContItemId())
+			{
+				iLog << " - Accept Negotation: ";
+				negotiationSuccess = true;
+				setState(ST_NEGOTIATION_FINISHED);
+						
+				packet.packetType = PacketType::ConstraintResult;
+				packet.srcAgentId = id();
+				packet.dstAgentId = packetHeader.srcAgentId;
+
+				negPacket.negotiationAccepted = negotiationSuccess;
+
+				packet.Write(outStream);
+				negPacket.Write(outStream);
+
+				socket->SendPacket(outStream.GetBufferPtr(), outStream.GetSize());
+			}
+			else
+			{
+				iLog << " - Search another Negotation: " << "Search Depth" << _depth;
+				if (_depth == 2)
+				{
+					iLog << " - MAX SEARCH DEPTH: ";
+					setState(ST_NEGOTIATION_FINISHED);
+					PacketHeader outPacketHead;
+					UCPacketAcceptNegotiation negPacket;
+					OutputMemoryStream outStream;
+
+					outPacketHead.packetType = PacketType::ConstraintResult;
+					outPacketHead.srcAgentId = id();
+					outPacketHead.dstAgentId = packetHeader.srcAgentId;
+
+					negPacket.negotiationAccepted = negotiationSuccess;
+
+					outPacketHead.Write(outStream);
+					negPacket.Write(outStream);
+
+					socket->SendPacket(outStream.GetBufferPtr(), outStream.GetSize());
+				}
+				else
+				{
+					setState(ST_RESOLVING_CONSTRAINT);
+					_depth += 1;
+					Node* newNode = new Node(App->agentContainer->allAgents().size());
+					mcp = App->agentContainer->createMCP(newNode, item_req.itemId, getContItemId(), _depth);
+				}
+			}
+
+			break;
+		}
+		else
+		{
+			wLog << "UCP 1 - OnPacketReceived() - PacketType::RequestConstraint was unexpected";
+		}
 
 	default:
 		wLog << "OnPacketReceived() - Unexpected PacketType.";
 	}
 }
 
-void UCP::itemRequest()
+uint16_t UCP::getReqItemId()
 {
-
+	return requestedItemId;
 }
 
-void UCP::resolveConstraint()
+uint16_t UCP::getContItemId()
 {
-
+	return contributedItemId;
 }
 
-void UCP::sendConstraint()
+AgentLocation UCP::getUcpLoc()
 {
-
+	return ucpLocation;
 }
 
-void UCP::finishNegotiation()
+unsigned int UCP::getDepth()
 {
-
+	return searchDepth;
 }

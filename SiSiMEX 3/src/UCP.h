@@ -22,12 +22,11 @@ public:
 	UCP* asUCP() override { return this; }
 	void OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader, InputMemoryStream &stream) override;
 
-	void itemRequest();
-	void resolveConstraint();
-	void sendConstraint();
-	void finishNegotiation();
+	uint16_t getReqItemId();
+	uint16_t getContItemId();
+	AgentLocation getUcpLoc();
+	unsigned int getDepth();
 	
-	// TODO
 private:
 	uint16_t requestedItemId;
 	uint16_t contributedItemId;
@@ -35,6 +34,8 @@ private:
 	AgentLocation ucpLocation;
 
 	unsigned int searchDepth;
+
+	bool negotiationSuccess = false;
 
 	MCPPtr mcp; //MCP pointer
 };
