@@ -26,6 +26,8 @@ public:
 	uint16_t getContItemId();
 	AgentLocation getUcpLoc();
 	unsigned int getDepth();
+
+	bool SendPacketFinishNegotiation();
 	
 private:
 	uint16_t requestedItemId;

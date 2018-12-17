@@ -9,7 +9,7 @@ enum UCP_states
 	ST_INIT, 
 	ST_REQUEST_ITEM,
 	ST_RESOLVING_CONSTRAINT,
-	ST_SENDING_CONSTRAINT, 
+	ST_IDLE, 
 	ST_NEGOTIATION_FINISHED
 };
 
@@ -40,7 +40,18 @@ void UCP::update()
 	case ST_RESOLVING_CONSTRAINT: 
 		break;
 	
-	case ST_SENDING_CONSTRAINT: 
+	case ST_IDLE: 
+		if (mcp.get() != nullptr)
+		{
+			if (mcp.get()->state() == ST_NEGOTIATION_FINISHED)
+				negotiationSuccess = true;
+			else
+				negotiationSuccess = false;
+
+			setState(ST_NEGOTIATION_FINISHED);
+			SendPacketFinishNegotiation();
+
+		}
 		break;
 	
 	case ST_NEGOTIATION_FINISHED: 
@@ -154,4 +165,23 @@ AgentLocation UCP::getUcpLoc()
 unsigned int UCP::getDepth()
 {
 	return searchDepth;
+}
+
+bool UCP::SendPacketFinishNegotiation()
+{
+	// Create message header and data
+	PacketHeader packet;
+	packet.packetType = PacketType::NegotiationAcceptance;
+	packet.srcAgentId = id();
+	packet.dstAgentId = ucpLocation.agentId;
+
+	UCPacketAcceptNegotiation packetAcceptance;
+	packetAcceptance.negotiationAccepted = negotiationSuccess;
+
+	// Serialize message
+	OutputMemoryStream stream;
+	packet.Write(stream);
+	packet.Write(stream);
+
+	return sendPacketToAgent(ucpLocation.hostIP, ucpLocation.hostPort, stream);
 }

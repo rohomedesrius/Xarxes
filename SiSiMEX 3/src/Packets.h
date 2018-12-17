@@ -140,14 +140,17 @@ class UCPacketAcceptNegotiation
 {
 public:
 	bool negotiationAccepted;
+	AgentLocation location;
 
 	void Read(InputMemoryStream &stream)
 	{
 		stream.Read(negotiationAccepted);
+		location.Read(stream);
 	}
 	void Write(OutputMemoryStream &stream)
 	{
 		stream.Write(negotiationAccepted);
+		location.Write(stream);
 	}
 };
 using PacketItemRequest = PacketRegisterMCC;
