@@ -28,6 +28,8 @@ public:
 	unsigned int getDepth();
 
 	bool SendPacketFinishNegotiation();
+	bool NegotiationAccepted() const { return negotiationSuccess; }
+
 	
 private:
 	uint16_t requestedItemId;

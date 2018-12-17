@@ -57,10 +57,10 @@ void UCC::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader
 	case PacketType::NegotiationAcceptance:
 		if (state() == WAITING_CONSTRAINT)
 		{
-			PacketAcceptNegotiation packetData;
+			UCPacketAcceptNegotiation packetData;
 			packetData.Read(stream);
 
-			negotiationSuccesful = packetData.acceptedNegotiation;
+			negotiationSuccesful = packetData.negotiationAccepted;
 			setState(NEGOTIATION_FINISHED);
 		}
 

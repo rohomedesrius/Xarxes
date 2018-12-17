@@ -52,7 +52,29 @@ void MCP::update()
 		{
 			if (_ucp.get()->state() == State::ST_NEGOTIATION_FINISHED)
 			{
-				//_negotiationSucces = ucp->ne;  TODO get the bool from ucp	
+				if (_ucp.get()->NegotiationAccepted())
+				{
+					// Negotiation Accepted -------
+					negotiationSucces = true;
+					setState(ST_NEGOTIATION_FINISHED);
+				}
+
+				else
+				{
+					if (_mccRegisterIndex < _mccRegisters.size())
+					{
+						_ucp.get()->stop();
+						_mccRegisterIndex++;
+						setState(ST_ITERATING_OVER_MCCs);
+					}
+					else
+					{
+						// Negotiation Canceled -------
+						negotiationSucces = false;
+						setState(ST_NEGOTIATION_FINISHED);
+					}
+				}
+				
 			}
 		}
 		break;
@@ -107,7 +129,7 @@ void MCP::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader
 		break;
 
 	case PacketType::NegotiationAcceptance:
-	{
+	
 		if (state() == ST_WAIT_ACCEPTANCE)
 		{
 			MCPacketNegociationRequest packetData;
@@ -125,7 +147,8 @@ void MCP::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader
 				setState(ST_ITERATING_OVER_MCCs);
 			}
 		}
-	}
+		break;
+	
 
 	default:
 		wLog << "OnPacketReceived() - Unexpected PacketType.";
@@ -134,6 +157,9 @@ void MCP::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader
 
 bool MCP::StartNegotioationRequest()
 {
+	if (_mccRegisters.size() == 0)
+		return false;
+
 	OutputMemoryStream ostream;
 
 	PacketHeader p;

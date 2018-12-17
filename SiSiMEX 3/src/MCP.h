@@ -52,6 +52,7 @@ private:
 
 	unsigned int _searchDepth;
 
+	bool negotiationSucces = false;
 	UCPPtr _ucp;
 };
 

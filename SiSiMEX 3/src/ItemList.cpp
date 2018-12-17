@@ -65,3 +65,15 @@ void ItemList::recomputeMissingItems()
 		}
 	}
 }
+
+bool ItemList::isItemUsed(ItemId itemId)
+{
+	assert(itemId < MAX_ITEMS && "ItemsList::isItemsWithIdUsed() - itemId out of bounds.");
+	return usedItems[itemId];
+}
+
+void ItemList::SetItemUsed(ItemId itemId, bool used)
+{
+	assert(itemId < MAX_ITEMS && "ItemsList::UpdateItemUsed() - itemId out of bounds.");
+	usedItems[itemId] = used;
+}

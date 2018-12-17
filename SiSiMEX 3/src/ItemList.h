@@ -34,6 +34,11 @@ public:
 	// Returns the number of missing items (number of items from 0 to MAX_ITEMS -1 not in the list)
 	unsigned int numMissingItems() const;
 
+	//Return if item is used
+	bool isItemUsed(ItemId itemId);
+
+	//Set an item used;
+	void SetItemUsed(ItemId itemId, bool used);
 
 private:
 
@@ -41,6 +46,7 @@ private:
 	void recomputeMissingItems();
 
 	int items[MAX_ITEMS] = {};
+	bool usedItems[MAX_ITEMS] = {};
 	unsigned int numberOfItems = 0;
 	unsigned int numberOfMissingItems = MAX_ITEMS;
 };

@@ -78,6 +78,7 @@ void MCC::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader
 {
 	const PacketType packetType = packetHeader.packetType;
 
+	PacketHeader outPacketHead;
 	MCPacketNegociationRequest packetData;
 	OutputMemoryStream outStream;
 
@@ -99,9 +100,6 @@ void MCC::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader
 	// TODO: Handle other packets
 	case PacketType::NegotiationRequest:
 
-		PacketHeader outPacketHead;
-
-
 		outPacketHead.packetType = PacketType::NegotiationAcceptance;
 		outPacketHead.srcAgentId = id();
 		outPacketHead.dstAgentId = packetHeader.srcAgentId;
@@ -115,7 +113,7 @@ void MCC::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader
 		else
 		{
 			//TODO
-			/*if (node()->itemList().isItemsWithIdUsed(_contributedItemId))
+			if (node()->itemList().isItemUsed(_contributedItemId))
 			{
 				packetData.availableNegotiation = false;
 
@@ -127,8 +125,8 @@ void MCC::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader
 			}
 			else
 			{
-				node()->itemList().UpdateItemUsed(_contributedItemId, true);
-			}*/
+				node()->itemList().SetItemUsed(_contributedItemId, true);
+			}
 
 			packetData.availableNegotiation = true;
 
