@@ -27,6 +27,7 @@ public:
 	AgentLocation getUcpLoc();
 	unsigned int getDepth();
 
+	bool sendPacketStartNegotiation();
 	bool SendPacketFinishNegotiation();
 	bool NegotiationAccepted() const { return negotiationSuccess; }
 

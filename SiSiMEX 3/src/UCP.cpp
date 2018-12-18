@@ -31,7 +31,9 @@ void UCP::update()
 {
 	switch (state())
 	{
-	case ST_INIT: 
+	case ST_INIT:
+		sendPacketStartNegotiation();
+		setState(ST_REQUEST_ITEM);
 		break;
 
 	case ST_REQUEST_ITEM: 
@@ -93,7 +95,7 @@ void UCP::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader
 				negotiationSuccess = true;
 				setState(ST_NEGOTIATION_FINISHED);
 						
-				packet.packetType = PacketType::ConstraintResult;
+				packet.packetType = PacketType::NegotiationAcceptance;
 				packet.srcAgentId = id();
 				packet.dstAgentId = packetHeader.srcAgentId;
 
@@ -166,6 +168,20 @@ unsigned int UCP::getDepth()
 {
 	return searchDepth;
 }
+
+bool UCP::sendPacketStartNegotiation()
+{
+	PacketHeader packet;
+	packet.packetType = PacketType::ItemRequest;
+	packet.srcAgentId = id();
+	packet.dstAgentId = ucpLocation.agentId;
+
+	OutputMemoryStream stream;
+	packet.Write(stream);
+
+	return sendPacketToAgent(ucpLocation.hostIP, ucpLocation.hostPort, stream);
+}
+
 
 bool UCP::SendPacketFinishNegotiation()
 {

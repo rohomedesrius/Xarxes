@@ -50,7 +50,20 @@ void MCC::update()
 		{
 			if (_ucc.get()->state() == State::ST_FINISHED)
 			{
-				//TODO wait for ucc
+				if (_ucc.get()->GetNegotiationResult())
+				{
+					//negotiation succesful
+					setState(ST_FINISHED);
+				}
+
+				else
+				{
+					//negotiation unsuccesful
+					//_ucc->stop();
+					setState(ST_IDLE);
+				}
+
+				node()->itemList().SetItemUsed(_contributedItemId, false);
 			}
 		}
 		break;

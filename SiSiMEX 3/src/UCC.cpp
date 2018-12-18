@@ -20,6 +20,12 @@ UCC::~UCC()
 {
 }
 
+void UCC::update()
+{
+	if(state() == ST_INIT)
+		setState(WAITING_REQUEST);
+}
+
 void UCC::stop()
 {
 	destroy();
@@ -46,6 +52,8 @@ void UCC::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader
 			packetHead.Write(outstream);
 			packetData.Write(outstream);
 
+			setState(WAITING_CONSTRAINT);
+
 			socket->SendPacket(outstream.GetBufferPtr(), outstream.GetSize());
 		}
 		else
@@ -63,6 +71,7 @@ void UCC::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader
 			negotiationSuccesful = packetData.negotiationAccepted;
 			setState(NEGOTIATION_FINISHED);
 		}
+		break;
 
 	default:
 		wLog << "OnPacketReceived() - Unexpected PacketType.";
