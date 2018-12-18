@@ -59,7 +59,7 @@ void MCC::update()
 				else
 				{
 					//negotiation unsuccesful
-					//_ucc->stop();
+					_ucc->stop();
 					setState(ST_IDLE);
 				}
 

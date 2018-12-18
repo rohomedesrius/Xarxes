@@ -109,7 +109,7 @@ void UCP::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader
 			else
 			{
 				iLog << " - Search another Negotation: " << "Search Depth" << _depth;
-				if (_depth == 2)
+				if (_depth == MAX_SEARCH_DEPTH)
 				{
 					iLog << " - MAX SEARCH DEPTH: ";
 					setState(ST_NEGOTIATION_FINISHED);
@@ -117,7 +117,7 @@ void UCP::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader
 					UCPacketAcceptNegotiation negPacket;
 					OutputMemoryStream outStream;
 
-					outPacketHead.packetType = PacketType::ConstraintResult;
+					outPacketHead.packetType = PacketType::NegotiationAcceptance;
 					outPacketHead.srcAgentId = id();
 					outPacketHead.dstAgentId = packetHeader.srcAgentId;
 

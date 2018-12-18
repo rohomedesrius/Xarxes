@@ -139,6 +139,8 @@ void MCP::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader
 			{
 				CreateUCP(packetData.location);
 				setState(ST_NEGOCIATING_UCP_RES);
+
+				iLog << " - MPC: (" << id() << ") negotiating with MCC: (" << packetHeader.srcAgentId << ")";
 			}
 
 			else
