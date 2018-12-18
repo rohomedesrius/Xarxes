@@ -58,3 +58,5 @@ static const unsigned int MAX_NODES = 4U;
  * etc.
  */
 #define MAX_SEARCH_DEPTH 10
+
+#define ITEMPRICE 100

@@ -46,7 +46,7 @@ private:
 
 	void spawnMCC(int nodeId, int contributedItemId, int constraintItemId);
 
-
+	void CreatePayOption(MCP* mcp);
 
 	std::vector<NodePtr> _nodes; /**< Array of nodes spawn in this host. */
 

@@ -475,6 +475,10 @@ void ModuleNodeCluster::runSystem()
 				wLog << "MCP exchange at Node " << node->id() << " not found:"
 					<< " -" << mcp->contributedItemId()
 					<< " +" << mcp->requestedItemId();
+
+				//TODO: Create imgui pop to pay for the item;
+				CreatePayOption(mcp);
+
 			}
 			mcp->stop();
 		}
@@ -527,3 +531,35 @@ void ModuleNodeCluster::spawnMCC(int nodeId, int contributedItemId, int constrai
 		wLog << "Could not find node with ID " << nodeId;
 	}
 }
+
+void ModuleNodeCluster::CreatePayOption(MCP* mcp)
+{
+	ImGui::OpenPopup("Payment Request");
+
+	if (ImGui::BeginPopup("Payment Request"))
+	{
+		ImGui::Text("Not possible to trade");
+		ImGui::Text("Do you want to buy it?");
+		ImGui::Text("price: 100");
+
+		if (ImGui::Button("Yes"))
+		{
+			if (mcp->node()->GetCurrentMoney() >= ITEMPRICE)
+			{
+				mcp->node()->itemList().addItem(mcp->requestedItemId());
+				mcp->node()->SetCurrentMoney(-ITEMPRICE);
+			}
+
+			else
+			{
+				ImGui::Text("You are poor. Get the fuck outta here");
+			}
+		}
+
+		if (ImGui::Button("No"))
+		{
+			return;
+		}
+	}
+}
+
