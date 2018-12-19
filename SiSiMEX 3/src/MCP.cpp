@@ -50,7 +50,7 @@ void MCP::update()
 
 		if (_ucp.get() != nullptr)
 		{
-			if (_ucp.get()->state() == State::ST_NEGOTIATION_FINISHED)
+			if (_ucp.get()->state() == 4)
 			{
 				if (_ucp.get()->NegotiationAccepted())
 				{
@@ -63,7 +63,7 @@ void MCP::update()
 				{
 					if (_mccRegisterIndex < _mccRegisters.size())
 					{
-						_ucp.get()->stop();
+						StopUCP();
 						_mccRegisterIndex++;
 						setState(ST_ITERATING_OVER_MCCs);
 					}

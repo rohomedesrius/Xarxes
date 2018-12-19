@@ -477,7 +477,7 @@ void ModuleNodeCluster::runSystem()
 					<< " +" << mcp->requestedItemId();
 
 				//TODO: Create imgui pop to pay for the item;
-				CreatePayOption(mcp);
+				//CreatePayOption(mcp);
 
 			}
 			mcp->stop();

@@ -130,7 +130,7 @@ void UCP::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader
 				}
 				else
 				{
-					setState(ST_RESOLVING_CONSTRAINT);
+					setState(ST_IDLE);
 					_depth += 1;
 					Node* newNode = new Node(App->agentContainer->allAgents().size());
 					mcp = App->agentContainer->createMCP(newNode, item_req.itemId, getContItemId(), _depth);
