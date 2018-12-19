@@ -63,7 +63,7 @@ void MCP::update()
 				{
 					if (_mccRegisterIndex < _mccRegisters.size())
 					{
-						StopUCP();
+						_ucp->stop();
 						_mccRegisterIndex++;
 						setState(ST_ITERATING_OVER_MCCs);
 					}
@@ -128,7 +128,7 @@ void MCP::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader
 		}
 		break;
 
-	case PacketType::NegotiationAcceptance:
+	case PacketType::NegotiationRequestResult:
 	
 		if (state() == ST_WAIT_ACCEPTANCE)
 		{
@@ -159,7 +159,7 @@ void MCP::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader
 
 bool MCP::StartNegotioationRequest()
 {
-	if (_mccRegisters.size() == 0)
+	if (_mccRegisters.size() == 0 || _mccRegisterIndex > _mccRegisters.size() - 1)
 		return false;
 
 	OutputMemoryStream ostream;
@@ -184,7 +184,7 @@ bool MCP::negotiationFinished() const
 
 bool MCP::negotiationAgreement() const
 {
-	return _negotiationSucces; // TODO: Did the child UCP find a solution?
+	return negotiationSucces; // TODO: Did the child UCP find a solution?
 }
 
 void MCP::CreateUCP(const AgentLocation loc)
@@ -197,7 +197,6 @@ void MCP::CreateUCP(const AgentLocation loc)
 void MCP::StopUCP()
 {
 	if (_ucp != nullptr) _ucp->stop();
-	delete _ucp.get();
 }
 
 bool MCP::queryMCCsForItem(int itemId)

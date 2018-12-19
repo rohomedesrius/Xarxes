@@ -76,16 +76,12 @@ void UCP::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader
 	switch (packetType)
 	{
 	case PacketType::ConstraintRequest:
-		if (state() == ST_REQUEST_ITEM)
+		if (state() == ST_REQUEST_ITEM || state() == ST_IDLE)
 		{
-			PacketHeader packet;
-			packet.packetType = packetType;
-			PacketItemRequest item_req;
-			PacketConstraintRequest constrain_req;
-			
+
+			PacketItemRequest item_req;	
 			item_req.Read(stream);
-			UCPacketAcceptNegotiation negPacket;
-			OutputMemoryStream outStream;
+
 
 			unsigned int _depth = getDepth();
 
@@ -94,14 +90,18 @@ void UCP::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader
 				iLog << " - Accept Negotation: ";
 				negotiationSuccess = true;
 				setState(ST_NEGOTIATION_FINISHED);
+
+				PacketHeader outPacketHead;
+				UCPacketAcceptNegotiation negPacket;
+				OutputMemoryStream outStream;
 						
-				packet.packetType = PacketType::NegotiationAcceptance;
-				packet.srcAgentId = id();
-				packet.dstAgentId = packetHeader.srcAgentId;
+				outPacketHead.packetType = PacketType::ConstraintAcceptance;
+				outPacketHead.srcAgentId = id();
+				outPacketHead.dstAgentId = packetHeader.srcAgentId;
 
 				negPacket.negotiationAccepted = negotiationSuccess;
 
-				packet.Write(outStream);
+				outPacketHead.Write(outStream);
 				negPacket.Write(outStream);
 
 				socket->SendPacket(outStream.GetBufferPtr(), outStream.GetSize());
@@ -117,7 +117,7 @@ void UCP::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader
 					UCPacketAcceptNegotiation negPacket;
 					OutputMemoryStream outStream;
 
-					outPacketHead.packetType = PacketType::NegotiationAcceptance;
+					outPacketHead.packetType = PacketType::ConstraintAcceptance;
 					outPacketHead.srcAgentId = id();
 					outPacketHead.dstAgentId = packetHeader.srcAgentId;
 
@@ -187,7 +187,7 @@ bool UCP::SendPacketFinishNegotiation()
 {
 	// Create message header and data
 	PacketHeader packet;
-	packet.packetType = PacketType::NegotiationAcceptance;
+	packet.packetType = PacketType::ConstraintAcceptance;
 	packet.srcAgentId = id();
 	packet.dstAgentId = ucpLocation.agentId;
 

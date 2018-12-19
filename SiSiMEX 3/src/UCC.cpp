@@ -62,7 +62,7 @@ void UCC::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader
 		}
 		break;
 
-	case PacketType::NegotiationAcceptance:
+	case PacketType::ConstraintAcceptance:
 		if (state() == WAITING_CONSTRAINT)
 		{
 			UCPacketAcceptNegotiation packetData;

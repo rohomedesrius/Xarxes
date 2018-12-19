@@ -48,7 +48,7 @@ void MCC::update()
 	case ST_NEGOCIATING:
 		if (_ucc.get() != nullptr)
 		{
-			if (_ucc.get()->state() == State::ST_FINISHED)
+			if (_ucc.get()->state() == 3)
 			{
 				if (_ucc.get()->GetNegotiationResult())
 				{
@@ -113,7 +113,7 @@ void MCC::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader
 	// TODO: Handle other packets
 	case PacketType::NegotiationRequest:
 
-		outPacketHead.packetType = PacketType::NegotiationAcceptance;
+		outPacketHead.packetType = PacketType::NegotiationRequestResult;
 		outPacketHead.srcAgentId = id();
 		outPacketHead.dstAgentId = packetHeader.srcAgentId;
 
