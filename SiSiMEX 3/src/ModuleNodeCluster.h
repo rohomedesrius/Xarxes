@@ -48,7 +48,12 @@ private:
 
 	void CreatePayOption(MCP* mcp);
 
+	void SetPaymentData(MCP* mcp_payer, bool payment_option);
+
 	std::vector<NodePtr> _nodes; /**< Array of nodes spawn in this host. */
 
 	int state = 0; /**< State machine. */
+
+	bool payment_option = false;
+	MCP* mcp_payer = nullptr;
 };

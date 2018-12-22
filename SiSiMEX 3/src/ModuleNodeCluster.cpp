@@ -179,6 +179,9 @@ bool ModuleNodeCluster::updateGUI()
 			ImGui::PopID();
 			nodeId++;
 		}
+
+		if(mcp_payer != nullptr && payment_option)
+			CreatePayOption(mcp_payer);
 	}
 
 	ImGui::End();
@@ -469,18 +472,20 @@ void ModuleNodeCluster::runSystem()
 				iLog << "MCP exchange at Node " << node->id() << ":"
 					<< " -" << mcp->contributedItemId()
 					<< " +" << mcp->requestedItemId();
+
+				mcp->stop();
 			}
 			else
 			{
-				wLog << "MCP exchange at Node " << node->id() << " not found:"
-					<< " -" << mcp->contributedItemId()
-					<< " +" << mcp->requestedItemId();
+				if(!payment_option)
+					wLog << "MCP exchange at Node " << node->id() << " not found:"
+						<< " -" << mcp->contributedItemId()
+						<< " +" << mcp->requestedItemId();
 
 				//TODO: Create imgui pop to pay for the item;
-				//CreatePayOption(mcp);
+				SetPaymentData(mcp, true);
 
 			}
-			mcp->stop();
 		}
 	}
 
@@ -534,9 +539,9 @@ void ModuleNodeCluster::spawnMCC(int nodeId, int contributedItemId, int constrai
 
 void ModuleNodeCluster::CreatePayOption(MCP* mcp)
 {
-	ImGui::OpenPopup("Payment Request");
+	ImGui::Begin("Payment Request");
 
-	if (ImGui::BeginPopup("Payment Request"))
+	//if (ImGui::BeginPopupModal("Payment Request"))
 	{
 		ImGui::Text("Not possible to trade");
 		ImGui::Text("Do you want to buy it?");
@@ -548,18 +553,46 @@ void ModuleNodeCluster::CreatePayOption(MCP* mcp)
 			{
 				mcp->node()->itemList().addItem(mcp->requestedItemId());
 				mcp->node()->SetCurrentMoney(-ITEMPRICE);
+
+				dLog << "MCP - " << mcp->id() << " has bought the item: " << mcp->requestedItemId() << " for " << ITEMPRICE << " coins";
 			}
 
 			else
 			{
-				ImGui::Text("You are poor. Get the fuck outta here");
+				dLog << "MCP - " << mcp->id() << " tried bought the item: " << mcp->requestedItemId() << " with failure";
+				dLog << "Current money: " << mcp->node()->GetCurrentMoney() << "// money needed: " << ITEMPRICE;
 			}
+
+			SetPaymentData(mcp_payer, false);
+			mcp->stop();
 		}
+
 
 		if (ImGui::Button("No"))
 		{
-			return;
+			SetPaymentData(mcp_payer, false);
+			mcp->stop();
 		}
+
+		//ImGui::EndPopup();
 	}
+
+	ImGui::End();
 }
+
+void ModuleNodeCluster::SetPaymentData(MCP* mcp_payer, bool payment_option)
+{
+	if (payment_option)
+	{
+		this->mcp_payer = mcp_payer;
+	}
+
+	else
+	{
+		this->mcp_payer = nullptr;
+	}
+
+	this->payment_option = payment_option;
+}
+
 

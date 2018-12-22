@@ -83,8 +83,6 @@ void UCP::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader
 			item_req.Read(stream);
 
 
-			unsigned int _depth = getDepth();
-
 			if (item_req.itemId == getContItemId())
 			{
 				iLog << " - Accept Negotation: ";
@@ -108,8 +106,8 @@ void UCP::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader
 			}
 			else
 			{
-				iLog << " - Search another Negotation: " << "Search Depth" << _depth;
-				if (_depth == MAX_SEARCH_DEPTH)
+				iLog << " - Search another Negotation: " << "Search Depth " << searchDepth;
+				if (searchDepth == MAX_SEARCH_DEPTH)
 				{
 					iLog << " - MAX SEARCH DEPTH: ";
 					setState(ST_NEGOTIATION_FINISHED);
@@ -131,9 +129,9 @@ void UCP::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader
 				else
 				{
 					setState(ST_IDLE);
-					_depth += 1;
+					searchDepth ++;
 					Node* newNode = new Node(App->agentContainer->allAgents().size());
-					mcp = App->agentContainer->createMCP(newNode, item_req.itemId, getContItemId(), _depth);
+					mcp = App->agentContainer->createMCP(newNode, item_req.itemId, getContItemId(), searchDepth);
 				}
 			}
 

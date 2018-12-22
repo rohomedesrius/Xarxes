@@ -160,7 +160,10 @@ void MCP::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader
 bool MCP::StartNegotioationRequest()
 {
 	if (_mccRegisters.size() == 0 || _mccRegisterIndex > _mccRegisters.size() - 1)
+	{
+		setState(ST_NEGOTIATION_FINISHED);
 		return false;
+	}
 
 	OutputMemoryStream ostream;
 

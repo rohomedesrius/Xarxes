@@ -57,6 +57,6 @@ static const unsigned int MAX_NODES = 4U;
  * If MAX_SEARCH_DEPTH == 1, trilateral exchanges will be also found.
  * etc.
  */
-#define MAX_SEARCH_DEPTH 10
+#define MAX_SEARCH_DEPTH 1
 
 #define ITEMPRICE 100
