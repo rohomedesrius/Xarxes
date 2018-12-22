@@ -11,7 +11,7 @@ class MCP :
 public:
 
 	// Constructor and destructor
-	MCP(Node *node, uint16_t requestedItemID, uint16_t contributedItemID, unsigned int searchDepth);
+	MCP(Node *node, uint16_t requestedItemID, uint16_t contributedItemID, unsigned int searchDepth, unsigned int money);
 	~MCP();
 
 	// Agent methods
@@ -51,6 +51,7 @@ private:
 	std::vector<AgentLocation> _mccRegisters; /**< MCCs returned by the YP. */
 
 	unsigned int _searchDepth;
+	unsigned int _money;
 
 	bool negotiationSucces = false;
 	UCPPtr _ucp;

@@ -14,11 +14,12 @@ enum State
 	ST_NEGOTIATION_FINISHED
 };
 
-MCP::MCP(Node *node, uint16_t requestedItemID, uint16_t contributedItemID, unsigned int searchDepth) :
+MCP::MCP(Node *node, uint16_t requestedItemID, uint16_t contributedItemID, unsigned int searchDepth, unsigned int money) :
 	Agent(node),
 	_requestedItemId(requestedItemID),
 	_contributedItemId(contributedItemID),
-	_searchDepth(searchDepth)
+	_searchDepth(searchDepth),
+	_money(money)
 {
 	setState(ST_INIT);
 }
@@ -194,7 +195,7 @@ void MCP::CreateUCP(const AgentLocation loc)
 {
 	Node* n = new Node(App->agentContainer->allAgents().size());
 	_ucp = App->agentContainer->createUCP(n, requestedItemId(), contributedItemId(), 
-		loc, searchDepth());
+		loc, searchDepth(), _money);
 }
 
 void MCP::StopUCP()

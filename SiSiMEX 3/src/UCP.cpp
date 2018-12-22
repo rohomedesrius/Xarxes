@@ -13,12 +13,13 @@ enum UCP_states
 	ST_NEGOTIATION_FINISHED
 };
 
-UCP::UCP(Node *node, uint16_t _requestedItemId, uint16_t _contributedItemId, const AgentLocation &ucpsLoc, unsigned int _searchDepth) : Agent(node)
+UCP::UCP(Node *node, uint16_t _requestedItemId, uint16_t _contributedItemId, const AgentLocation &ucpsLoc, unsigned int _searchDepth, unsigned int money) : Agent(node)
 {
 	requestedItemId = _requestedItemId;
 	contributedItemId = _contributedItemId;
 	ucpLocation = ucpsLoc;
 	searchDepth = _searchDepth;
+	_money = money;
 
 	setState(ST_INIT);
 }
@@ -131,7 +132,7 @@ void UCP::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader
 					setState(ST_IDLE);
 					searchDepth ++;
 					Node* newNode = new Node(App->agentContainer->allAgents().size());
-					mcp = App->agentContainer->createMCP(newNode, item_req.itemId, getContItemId(), searchDepth);
+					mcp = App->agentContainer->createMCP(newNode, item_req.itemId, getContItemId(), searchDepth, _money);
 				}
 			}
 

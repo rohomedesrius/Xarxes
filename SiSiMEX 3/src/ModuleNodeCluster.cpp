@@ -518,7 +518,7 @@ void ModuleNodeCluster::spawnMCP(int nodeId, int requestedItemId, int contribute
 	dLog << "Spawn MCP - node " << nodeId << " - req. " << requestedItemId << " - contrib. " << contributedItemId;
 	if (nodeId >= 0 && nodeId < (int)_nodes.size()) {
 		NodePtr node = _nodes[nodeId];
-		App->agentContainer->createMCP(node.get(), requestedItemId, contributedItemId, 0);
+		App->agentContainer->createMCP(node.get(), requestedItemId, contributedItemId, 0, 300);
 	}
 	else {
 		wLog << "Could not find node with ID " << nodeId;
@@ -555,6 +555,7 @@ void ModuleNodeCluster::CreatePayOption(MCP* mcp)
 				mcp->node()->SetCurrentMoney(-ITEMPRICE);
 
 				dLog << "MCP - " << mcp->id() << " has bought the item: " << mcp->requestedItemId() << " for " << ITEMPRICE << " coins";
+				dLog << "MCP - " << mcp->id() << "current coints: " << mcp->node()->GetCurrentMoney();
 			}
 
 			else
