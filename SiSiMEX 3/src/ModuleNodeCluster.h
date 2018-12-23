@@ -48,6 +48,8 @@ private:
 
 	void CreatePayOption(MCP* mcp);
 
+	void CreateSaleOption(Node& node, unsigned int itemID);
+
 	void SetPaymentData(MCP* mcp_payer, bool payment_option);
 
 	std::vector<NodePtr> _nodes; /**< Array of nodes spawn in this host. */

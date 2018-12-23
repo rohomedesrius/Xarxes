@@ -241,7 +241,7 @@ bool ModuleNodeCluster::updateGUI()
 
 				if (ImGui::Button(oss.str().c_str(), ImVec2(20, 20)))
 				{
-					if (numItems == 0)
+					//if (numItems == 0)
 					{
 						selectedNode = nodeIndex;
 						selectedItem = itemId;
@@ -302,6 +302,11 @@ bool ModuleNodeCluster::updateGUI()
 					ImGui::Text("No spare items available to create an MCP.");
 					ImGui::PopStyleColor(1);
 				}
+			}
+
+			else
+			{
+				CreateSaleOption((*_nodes[selectedNode]), selectedItem);
 			}
 
 			ImGui::EndPopup();
@@ -580,6 +585,36 @@ void ModuleNodeCluster::CreatePayOption(MCP* mcp)
 
 	ImGui::End();
 }
+
+void ModuleNodeCluster::CreateSaleOption(Node& node, unsigned int itemID)
+{
+	int numberOfItems = node.itemList().numItemsWithId(itemID);
+
+	if (numberOfItems > 0)
+	{
+		//ImGui::Begin("Sale Request");
+
+		ImGui::Text("Do you want to sell one unit?");
+		ImGui::Text("income: 100 coins");
+
+		if (ImGui::Button("Yes"))
+		{
+			node.SetCurrentMoney(ITEMPRICE);
+			node.itemList().removeItem(itemID);
+			dLog << "Node - " << node.id() << " has sold the item: " << itemID << " for " << ITEMPRICE << " coins";
+			dLog << "Node - " << node.id() << " current coints: " << node.GetCurrentMoney();
+		}
+
+
+		if (ImGui::Button("No"))
+		{
+			dLog << "Sell intent canceled";;
+		}
+
+		//ImGui::End();
+	}
+}
+
 
 void ModuleNodeCluster::SetPaymentData(MCP* mcp_payer, bool payment_option)
 {
